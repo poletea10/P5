@@ -38,6 +38,40 @@ permitan visualizar el funcionamiento de la curva ADSR.
   ellos, el ataque es relativamente rápido hasta alcanzar el nivel de mantenimiento (sin sobrecarga), y la
   liberación también es bastante rápida.
 
+En adsr.orc creamos los 4 instrumentos, con sus respectivos adsr, partiendo del instrument_dumb:
+```
+1	InstrumentDumb	ADSR_A=0.02; ADSR_D=0.1; ADSR_S=0.4; ADSR_R=0.1; N=40;
+2	InstrumentDumb	ADSR_A=0.02; ADSR_D=0.5; ADSR_S=0.1; ADSR_R=0.4; N=40;
+3	InstrumentDumb	ADSR_A=0.02; ADSR_D=0.4; ADSR_S=0.1; ADSR_R=0.04; N=40;
+4	InstrumentDumb	ADSR_A=0.3; ADSR_D=0; ADSR_S=0.8; ADSR_R=0.2; N=40;
+```
+
+Una vez creados, hacemos una partitura simple que consta de dos notas de cada instrumento en adsr.sco:
+```
+0       9       1       60      100
+120     8       1       60      100
+0       9       1       60      100
+120     8       1       60      100
+
+40      9       2       60      100
+120     8       2       60      100
+40      9       2       60      100
+120     8       2       60      100
+
+80      9       3       60      100
+160     8       3       60      100
+40      9       3       60      100
+120     8       3       60      100
+
+40      9       4       60      100
+120     8       4       60      100
+40      9       4       60      100
+120     8       4       60      100
+```
+Los visualizamos con le wavesurfer: //falta posar els tags per veure on aplica cada variable del ADSR
+  <img width="1918" height="417" alt="image" src="https://github.com/user-attachments/assets/8f63bde9-3c1e-4c6e-9183-be22d8d12460" />
+
+
 Para los cuatro casos, deberá incluir una gráfica en la que se visualice claramente la curva ADSR. Deberá
 añadir la información necesaria para su correcta interpretación, aunque esa información puede reducirse a
 colocar etiquetas y títulos adecuados en la propia gráfica (se valorará positivamente esta alternativa).
