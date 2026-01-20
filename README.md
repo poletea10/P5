@@ -106,3 +106,13 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
 >
 > No olvide escuchar el resultado generado y comprobar que no se producen ruidos extraños o distorsiones.
 > Sobre todo, tenga en cuenta la salud auditiva de quien será encargado de corregir su trabajo.
+
+
+## ENTENDER EL ARCHIVO .SCO
+(lag desde que acaba línia anterior / acción - 9 note on, 8 note off / nº instrumento / nota / velocidad tecla)
+0	9	1	60	100
+120	8	1	60	100
+40	9	1	62	100
+120	8	1	62	100
+
+Do suena, esperamos 120 instantes y apagamos Do, esperamos 40 instantes y encendemos Re, esperamos 120 instantes y apagamos Re.
