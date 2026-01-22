@@ -38,43 +38,64 @@ permitan visualizar el funcionamiento de la curva ADSR.
   ellos, el ataque es relativamente rápido hasta alcanzar el nivel de mantenimiento (sin sobrecarga), y la
   liberación también es bastante rápida.
 
-En adsr.orc creamos los 4 instrumentos, con sus respectivos adsr, partiendo del instrument_dumb:
-```
-1	InstrumentDumb	ADSR_A=0.02; ADSR_D=0.1; ADSR_S=0.4; ADSR_R=0.1; N=40;
-2	InstrumentDumb	ADSR_A=0.02; ADSR_D=0.5; ADSR_S=0.1; ADSR_R=0.4; N=40;
-3	InstrumentDumb	ADSR_A=0.02; ADSR_D=0.4; ADSR_S=0.1; ADSR_R=0.04; N=40;
-4	InstrumentDumb	ADSR_A=0.3; ADSR_D=0; ADSR_S=0.8; ADSR_R=0.2; N=40;
+En adsr.orc creamos los instrumentos, con sus respectivos parámetros ADSR, partiendo de instrument_dumb:
+``` ruby
+1	InstrumentDumb	ADSR_A=0.1; ADSR_D=0.4; ADSR_S=0.6; ADSR_R=0.2; N=40; # Cada etapa ADSR dura lo suficiente para poderse representar claramente cada parámetro de la curva
+
+2	InstrumentDumb	ADSR_A=0.02; ADSR_D=0.4; ADSR_S=0; ADSR_R=0; N=40; # Al tener Sustain = 0, si mantenemos pulsada la tecla, el sonido se extingirá después del Delay
+
+3	InstrumentDumb	ADSR_A=0.02; ADSR_D=0.2; ADSR_S=0.1; ADSR_R=0.2; N=40; # Si el usuario pulsa la tecla un solo instante, pasaremos directamente a la etapa de Release, lo que inicializará una extinción repentina
+
+4	InstrumentDumb	ADSR_A=0.3; ADSR_D=0; ADSR_S=1; ADSR_R=0.1; N=40; # Ataque relativamente rápido, no hay delay (vamos directos al nivel de mantenimiento), y la liberación también es bastante rápida
 ```
 
 Una vez creados, hacemos una partitura simple que consta de dos notas de cada instrumento en adsr.sco:
 ```
-0       9       1       60      100
+40      9       1       60      100
 120     8       1       60      100
-0       9       1       60      100
+40      9       1       60      100
 120     8       1       60      100
 
+# Aquí nos aseguremos que se pulse suficiente tiempo para extinguirse
 40      9       2       60      100
 120     8       2       60      100
 40      9       2       60      100
 120     8       2       60      100
 
-80      9       3       60      100
-160     8       3       60      100
+# Aquí nos aseguramos que se pulse muy poco tiempo
 40      9       3       60      100
-120     8       3       60      100
+20      8       3       60      100
+120     9       3       60      100
+20      8       3       60      100
 
-40      9       4       60      100
+120     9       4       60      100
 120     8       4       60      100
 40      9       4       60      100
 120     8       4       60      100
 ```
-Los visualizamos con le wavesurfer: //falta posar els tags per veure on aplica cada variable del ADSR
-  <img width="1918" height="417" alt="image" src="https://github.com/user-attachments/assets/8f63bde9-3c1e-4c6e-9183-be22d8d12460" />
+Aquí la visualización del audio generado con wavesurfer:
+
+  <img width="1916" height="255" alt="image" src="img/adsr/adsr_audio.png" />
+
+Podemos ver claramente como la envolvente varía dependiendo del instrumento utilizado. El **primero** tiene cada etapa ADSR bien marcada, el **segundo y tercero** tienen un ataque rápido sin mantenimiento (extinción después del ataque; como un instrumento percusivo), y el **cuarto** tiene un ataque relativamente rápido sin Delay (llegamos directamente al nivel de mantenimiento), y un Release también rápido (instrumento "plano"). 
+
+Para el cuarto instrumento, el nivel de mantenimiento se ha puesto a 1 ya que la curva ADSR obliga el ataque a acabar en 1. Sin Delay y un S<1, estaríamos haciendo un salto directo del nivel 1 al nivel S, lo que añadiría un "click" indeseado al sonido.
 
 
-Para los cuatro casos, deberá incluir una gráfica en la que se visualice claramente la curva ADSR. Deberá
-añadir la información necesaria para su correcta interpretación, aunque esa información puede reducirse a
-colocar etiquetas y títulos adecuados en la propia gráfica (se valorará positivamente esta alternativa).
+Aquí las curvas ADSR (etiquetadas) de los cuatro instrumentos:
+
+<div class="row">
+  <div class="column">
+  <img width="522" height="264" alt="image" src="img/adsr/adsr_pretty_instrument_1.png" />
+  <img width="522" height="264" alt="image" src="img/adsr/adsr_pretty_instrument_2.png" />
+  </div>
+  <div class="column">
+  <img width="522" height="264" alt="image" src="img/adsr/adsr_pretty_instrument_3.png" />
+  <img width="522" height="264" alt="image" src="img/adsr/adsr_pretty_instrument_4.png" />
+  </div>
+</div>
+
+  **NOTA:** Cabe destacar que, para el Instrumento 3, la idea es nunca llegar a la etapa de mantenimiento (se pulsa un instante), así que pasamos directamente a la etapa de Release (obteniendo un sonido percusivo).
 
 ### Instrumentos Dumb y Seno.
 
@@ -144,9 +165,13 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
 
 ## ENTENDER EL ARCHIVO .SCO
 (lag desde que acaba línia anterior / acción - 9 note on, 8 note off / nº instrumento / nota / velocidad tecla)
+
 0	9	1	60	100
+
 120	8	1	60	100
+
 40	9	1	62	100
+
 120	8	1	62	100
 
 Do suena, esperamos 120 instantes y apagamos Do, esperamos 40 instantes y encendemos Re, esperamos 120 instantes y apagamos Re.
