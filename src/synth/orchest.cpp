@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <math.h>
 #include "orchest.h"
 #include "multinote_instr.h"
 #include "effect.h"
@@ -158,32 +159,56 @@ namespace upc {
   }
 
   const vector<float> & Orchest::synthesize(){
-    xt.assign(xt.size(),0);
-    if (!anyActive)
-      return xt;
+    xt.assign(xt.size(), 0.0f);
 
+    bool anyNowActive = false;
+    const float EPS = 1e-6f; // tail threshold
+    
     iterator i;
-    int num_inst = 0;
     for (i = instruments.begin(); i != instruments.end(); ++i) {
+
+      // Always get a block (even if inactive)
+      vector<float> xr(BSIZE, 0.0f);
+
       if (i->second->is_active()) {
-	    vector<float> & xr = (vector<float> &) i->second->synthesize();
-	    if (xr.size() != xt.size()) {
-	      cerr << "ERROR: xr xt size:" << xr.size() << '\t' << xt.size() << endl;
-	      return xt;
-	    }
-		for (Instrument::Effects::iterator e = i->second->effects.begin(); e != i->second->effects.end(); e++) {
-			(*e->second)(xr);
-		}
-	    for (unsigned n = 0; n < xr.size(); ++n)
-	      xt[n] += xr[n];
-	    num_inst++;
-	    if (i->second->is_active())
-	      anyActive = true;
+        // Normal synthesis
+        const vector<float> &xsrc = i->second->synthesize();
+        xr.assign(xsrc.begin(), xsrc.end());
+      } else {
+        // Inactive instrument: feed silence to let FX tails ring out
+        // (xr already zeros)
+      }
+
+      // Apply per-instrument effects ALWAYS (if present)
+      for (Instrument::Effects::iterator e = i->second->effects.begin();
+          e != i->second->effects.end(); ++e) {
+        (*e->second)(xr);
+      }
+
+      // Mix into master
+      for (unsigned n = 0; n < xr.size(); ++n)
+        xt[n] += xr[n];
+
+      // Update activity: instrument active OR tail still producing sound
+      if (i->second->is_active())
+        anyNowActive = true;
+      else {
+        // Detect tail energy in processed block
+        float peak = 0.0f;
+        for (unsigned n = 0; n < xr.size(); ++n) {
+          float a = fabsf(xr[n]);
+          if (a > peak) peak = a;
+        }
+        if (peak > EPS)
+          anyNowActive = true;
       }
     }
 
     for (unsigned n = 0; n < xt.size(); ++n)
       xt[n] *= gain;
+
+    // IMPORTANT: update anyActive for next call
+    anyActive = anyNowActive;
 
     return xt;
   }

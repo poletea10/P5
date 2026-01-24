@@ -1,12 +1,13 @@
 #include <iostream>
 #include "tremolo.h"
 #include "vibrato.h"
+#include "reverb.h"
 
 /*
   For each new effect:
-  - Add the header in this file
-  - Add the call to the constructor in get_effect() (also in this file)
-  - Add the source file to src/meson.build
+  - Add the header in this file (R-OK)
+  - Add the call to the constructor in get_effect() (also in this file) (R-OK)
+  - Add the source file to src/meson.build (R-OK)
 */
 
 using namespace std;
@@ -20,6 +21,9 @@ namespace upc {
     }
 	else if (name == "Vibrato") {
       pEffect = (Effect *) new Vibrato(parameters);
+    }
+  else if (name == "Reverb") {
+      pEffect = (Effect *) new Reverb(parameters);
     }
     return pEffect;
   }

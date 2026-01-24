@@ -1,0 +1,5 @@
+0   SynthFM ADSR_A=0.3; ADSR_D=0; ADSR_S=1; ADSR_R=0.3; N=40; I=3; N1=1; N2=1; # Chords (brass)
+1   TableSampler ADSR_A=0.008; ADSR_D=0.4; ADSR_S=0.0; ADSR_R=1.2; file=work/music/rock_with_you/drum_sample/vintage-snare-acoustic-drum_33bpm_D_minor.wav; # Drums (sampler)
+2   SynthFM ADSR_A=0.1; ADSR_D=0; ADSR_S=1; ADSR_R=0.2; N=40; I=4; N1=3; N2=2; # Solo 1 (clarinet)
+3   SynthFM ADSR_A=0.1; ADSR_D=0; ADSR_S=1; ADSR_R=0.2; N=40; I=4; N1=3; N2=2; # Solo 2 (clarinet)
+4   SynthFM ADSR_A=0.3; ADSR_D=0; ADSR_S=1; ADSR_R=0.3; N=40; I=3; N1=1; N2=1; # Violins (We'll use brass with reverb, which sounds great)

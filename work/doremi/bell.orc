@@ -1,0 +1,1 @@
+1   SynthFM ADSR_A=0.008; ADSR_D=0.4; ADSR_S=0.0; ADSR_R=1.2; N=40; I=4.0; N1=1; N2=1.4;
